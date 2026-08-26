@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { mockExpenses } from "../data/mockExpenses.js";
+import { isDataView } from "node:util/types";
 
 const router = Router();
 router.get("/", (req, res) => {
@@ -48,5 +49,13 @@ router.put("/:id", (req, res) => {
   return res.status(200).json(updateExpense);
 });
 
-
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  const index = mockExpenses.findIndex((expense) => expense.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: "Expense not found" });
+  }
+  mockExpenses.splice(index, 1);
+  return res.status(200).json({ message: "Expense deleted successfully" });
+});
 export default router;
