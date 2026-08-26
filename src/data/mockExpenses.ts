@@ -1,0 +1,42 @@
+export const mockExpenses = [
+  {
+    id: "1",
+    title: "Groceries",
+    amount: 50,
+    category: "Food",
+    date: new Date("2026-04-01"),
+    note: "Bought fruits and vegetables",
+  },
+  {
+    id: "2",
+    title: "Electricity Bill",
+    amount: 100,
+    category: "Utilities",
+    date: new Date("2026-05-02"),
+    note: "Paid electricity bill for May",
+  },
+  {
+    id: "3",
+    title: "Movie Tickets",
+    amount: 30,
+    category: "Shopping",
+    date: new Date("2026-06-03"),
+    note: "Bought tickets for a movie",
+  },
+  {
+    id: "4",
+    title: "celebrating birthday",
+    amount: 100,
+    category: "Shopping",
+    date: new Date("2025-08-03"),
+    note: "birthday gift",
+  },
+  {
+    id: "5",
+    title: "physical examination",
+    amount: 50,
+    category: "Health",
+    date: new Date("2024-06-03"),
+    note: "test",
+  },
+];
