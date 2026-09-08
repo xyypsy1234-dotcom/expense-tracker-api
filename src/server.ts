@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 // import healthRoutes from "./routes/healthRoutes.js";
 import expenseRoutes from "./routes/expenseRoutes.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 // app.use("/api/health", healthRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
