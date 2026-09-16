@@ -1,64 +1,58 @@
 import { mockExpenses } from "../data/mockExpenses.js";
+import { prisma } from "../lib/prisma.js";
+import type {
+  CreateExpenseData,
+  UpdateExpenseData,
+} from "../validations/expenseSchema.js";
 
-export function getAllExpenses() {
-  return mockExpenses;
+export async function getAllExpenses() {
+  const expenses = await prisma.expense.findMany({
+    orderBy: {
+      date: "desc",
+    },
+  });
+  return expenses.map((expense) => ({
+    ...expense,
+    amount: Number(expense.amount),
+    date: expense.date.toISOString(),
+  }));
 }
 
-export function createExpense(data: {
-  title: string;
-  category: string;
-  amount: number;
-  date: Date;
-  note?: string;
-}) {
-  const newExpense = {
-    id: crypto.randomUUID(),
-    title: data.title,
-    category: data.category,
-    amount: data.amount,
-    date: data.date,
-    note: data.note ?? "",
+export async function createExpense(data: CreateExpenseData) {
+  const expense = await prisma.expense.create({
+    data: {
+      title: data.title,
+      category: data.category,
+      amount: data.amount,
+      date: data.date,
+      note: data.note,
+    },
+  });
+  return {
+    ...expense,
+    amount: Number(expense.amount),
+    date: expense.date.toISOString(),
   };
-  mockExpenses.push(newExpense);
-  return newExpense;
 }
 
-export function updateExpense(
-  id: string,
-  data: {
-    title?: string;
-    category?: string;
-    amount?: number;
-    date?: Date;
-    note?: string;
-  },
-) {
-  const index = mockExpenses.findIndex((expense) => expense.id === id);
-  if (index === -1) {
-    return null;
-  }
-  const existing = mockExpenses[index];
-  if (!existing) {
-    return null;
-  }
-  const updateExpense = {
-    ...existing,
-    title: data.title ?? existing.title,
-    category: data.category ?? existing.category,
-    amount: data.amount ?? existing.amount,
-    date:data.date ??existing.date,
-    note:data.note ?? existing.note,
+export async function updateExpense(id: string, data: UpdateExpenseData) {
+  const expense = await prisma.expense.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return {
+    ...expense,
+    amount: Number(expense.amount),
+    date: expense.date.toISOString(),
   };
-  mockExpenses[index]=updateExpense;
-  return updateExpense;
 }
 
-
-export function deleteExpense(id: string){
-  const index = mockExpenses.findIndex((expense)=>expense.id===id);
-  if(index===-1){
-    return false;
-  }
-  mockExpenses.splice(index,1);
-  return true;
+export async function deleteExpense(id: string) {
+  await prisma.expense.delete({
+    where: {
+      id,
+    },
+  });
 }

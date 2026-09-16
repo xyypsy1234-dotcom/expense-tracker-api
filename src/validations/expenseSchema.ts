@@ -13,5 +13,8 @@ export const expenseSchema = z.object({
 export const updateExpenseSchema = expenseSchema
   .partial()
   .refine((data) => Object.keys(data).length > 0, {
-    message: "At least one field must be provide",
+    message: "At least one field must be provided",
   });
+
+export type CreateExpenseData = z.infer<typeof expenseSchema>;
+export type UpdateExpenseData = z.infer<typeof updateExpenseSchema>;
