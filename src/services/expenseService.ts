@@ -1,4 +1,3 @@
-import { mockExpenses } from "../data/mockExpenses.js";
 import { prisma } from "../lib/prisma.js";
 import type {
   CreateExpenseData,
