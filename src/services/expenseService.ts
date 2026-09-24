@@ -3,9 +3,13 @@ import type {
   CreateExpenseData,
   UpdateExpenseData,
 } from "../validations/expenseSchema.js";
+import { AppError } from "../utils/AppError.js";
 
-export async function getAllExpenses() {
+export async function getAllExpenses(userId: string) {
   const expenses = await prisma.expense.findMany({
+    where: {
+      userId,
+    },
     orderBy: {
       date: "desc",
     },
@@ -17,7 +21,7 @@ export async function getAllExpenses() {
   }));
 }
 
-export async function createExpense(data: CreateExpenseData) {
+export async function createExpense(data: CreateExpenseData, userId: string) {
   const expense = await prisma.expense.create({
     data: {
       title: data.title,
@@ -25,6 +29,7 @@ export async function createExpense(data: CreateExpenseData) {
       amount: data.amount,
       date: data.date,
       note: data.note,
+      userId,
     },
   });
   return {
@@ -34,7 +39,20 @@ export async function createExpense(data: CreateExpenseData) {
   };
 }
 
-export async function updateExpense(id: string, data: UpdateExpenseData) {
+export async function updateExpense(
+  id: string,
+  data: UpdateExpenseData,
+  userId: string,
+) {
+  const existingExpense = await prisma.expense.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  });
+  if (!existingExpense) {
+    throw new AppError("Expense not found", 404);
+  }
   const expense = await prisma.expense.update({
     where: {
       id,
@@ -48,7 +66,13 @@ export async function updateExpense(id: string, data: UpdateExpenseData) {
   };
 }
 
-export async function deleteExpense(id: string) {
+export async function deleteExpense(id: string, userId: string) {
+  const existingExpense = await prisma.expense.findFirst({
+    where: { id, userId },
+  });
+  if (!existingExpense) {
+    throw new AppError("Expense not found", 404);
+  }
   await prisma.expense.delete({
     where: {
       id,

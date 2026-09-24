@@ -3,7 +3,12 @@ import type { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt.js";
 import { AppError } from "../utils/AppError.js";
 
-export interface AuthRequest extends Request {
+export interface AuthRequest<
+  P = {},
+  ResBody = {},
+  ReqBody = {},
+  ReqQuery = {},
+> extends Request<P, ResBody, ReqBody, ReqQuery> {
   userId?: string;
 }
 
