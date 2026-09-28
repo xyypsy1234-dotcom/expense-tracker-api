@@ -37,7 +37,7 @@ export async function createExpense(
       throw new Error("AUthenticated user ID is missing");
     }
     const newExpense = await createExpenseService(req.body, req.userId);
-    return res.status(201).json({ newExpense });
+    return res.status(201).json( newExpense );
   } catch (error) {
     next(error);
   }
@@ -54,7 +54,7 @@ export async function updatedExpense(
     }
     const { id } = req.params;
     const updateExpense = await updateExpenseService(id, req.body, req.userId);
-    return res.status(200).json({ updateExpense });
+    return res.status(200).json( updateExpense );
   } catch (error) {
     next(error);
   }
