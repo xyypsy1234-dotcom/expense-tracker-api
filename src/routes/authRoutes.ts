@@ -6,6 +6,7 @@ import {
   login,
   getMe,
   logout,
+  checkEmail,
 } from "../controllers/authController.js";
 import { requireAuth } from "../middleware/authMiddleware.js";
 
@@ -15,5 +16,6 @@ router.post("/register", validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
 router.get("/me", requireAuth, getMe);
 router.post("/logout", requireAuth, logout);
+router.get("/check-email", checkEmail);
 
 export default router;

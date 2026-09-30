@@ -65,3 +65,15 @@ export async function getCurrentUser(userId: string) {
     email: user.email,
   };
 }
+
+export async function checkEmailExists(email: string): Promise<boolean> {
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return Boolean(existingUser);
+}

@@ -3,9 +3,12 @@ import {
   registerUser,
   loginUser,
   getCurrentUser,
+  checkEmailExists,
 } from "../services/authService.js";
 import { generateToken } from "../utils/jwt.js";
 import type { AuthRequest } from "../middleware/authMiddleware.js";
+
+import { AppError } from "../utils/AppError.js";
 
 export async function register(req: Request, res: Response) {
   const user = await registerUser(req.body);
@@ -51,4 +54,13 @@ export async function logout(req: Request, res: Response) {
   return res.status(200).json({
     message: "Logout successful",
   });
+}
+
+export async function checkEmail(req: Request, res: Response) {
+  const { email } = req.query;
+  if (!email || typeof email !== "string") {
+    throw new AppError("Email is required", 400);
+  }
+  const exists = await checkEmailExists(email);
+  return res.status(200).json({exists});
 }
