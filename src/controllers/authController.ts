@@ -10,6 +10,8 @@ import type { AuthRequest } from "../middleware/authMiddleware.js";
 
 import { AppError } from "../utils/AppError.js";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export async function register(req: Request, res: Response) {
   const user = await registerUser(req.body);
   return res.status(201).json({
@@ -24,8 +26,8 @@ export async function login(req: Request, res: Response) {
 
   res.cookie("token", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
   return res.status(200).json({
@@ -47,8 +49,8 @@ export async function getMe(req: AuthRequest, res: Response) {
 export async function logout(req: Request, res: Response) {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
 
   return res.status(200).json({
@@ -62,5 +64,5 @@ export async function checkEmail(req: Request, res: Response) {
     throw new AppError("Email is required", 400);
   }
   const exists = await checkEmailExists(email);
-  return res.status(200).json({exists});
+  return res.status(200).json({ exists });
 }

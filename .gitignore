@@ -1,6 +1,9 @@
 # .gitignore
 node_modules/
 .env*
+!.env.example
 dist/
 *.log
 /src/generated/prisma
+*.tsbuildinfo
+
